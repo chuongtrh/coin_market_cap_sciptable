@@ -1,8 +1,12 @@
+const CMC_API_KEY = "YOUR_API_KEY";
+
 async function fetchGlobalMarket() {
   try {
     let request = new Request(
-      "https://web-api.coinmarketcap.com/v1/global-metrics/quotes/latest"
+      "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest"
     );
+    request.headers = { "X-CMC_PRO_API_KEY": CMC_API_KEY };
+
     let response = await request.loadJSON();
     let data = response?.data?.quote?.USD;
     return {
@@ -60,18 +64,20 @@ function addLine(widget, text, price, percent, grow) {
   valueStack.setPadding(padding, 0, 0, 0);
 
   const percentStack = valueStack.addStack();
-  const percentText = percentStack.addText(percent);
+  const percentText = percentStack.addText(
+    `${percent > 0 ? "+" : ""}${percent}%`
+  );
   percentText.leftAlignText();
   percentText.font = Font.mediumSystemFont(12);
   percentText.textColor = new Color(grow);
 
   const priceStack = valueStack.addStack();
-  priceStack.addSpacer(50);
+  priceStack.addSpacer(30);
   const priceText = priceStack.addText(price);
   priceText.rightAlignText();
   priceText.font = Font.mediumSystemFont(12);
 
-  widget.addSpacer(2);
+  widget.addSpacer(4);
 }
 
 //This function from ChatGPT
